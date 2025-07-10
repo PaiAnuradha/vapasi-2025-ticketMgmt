@@ -49,6 +49,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.metawidget.modules.hibernate</groupId>
+            <artifactId>metawidget-hibernatevalidator</artifactId>
+            <version>4.2</version>
+        </dependency>
     </dependencies>
 
     <build>
