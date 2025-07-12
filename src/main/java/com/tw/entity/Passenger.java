@@ -1,5 +1,7 @@
 package com.tw.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.tw.util.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -25,8 +27,9 @@ public class Passenger {
 
     @Column(length = 25)
     @Enumerated(EnumType.STRING)
-    private String gender;
+    private Gender gender;
 
-    @ManyToMany(mappedBy = "passengers")
-    private List<Ticket> tickets;
+    @ManyToOne
+    @JoinColumn(name="pnr")
+    private Ticket ticket;
 }

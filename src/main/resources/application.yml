@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: vapasi-2025-ticketMgmt
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/vapasi
+    username: anuradha
+    password: mysql
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8089

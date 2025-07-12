@@ -1,5 +1,6 @@
 package com.tw.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,8 +25,7 @@ public class Ticket {
     @Column(name="travel_date", nullable=false)
     LocalDate travelDate;
 
-    @ManyToMany
-    @JoinTable(name = "ticket_passenger", joinColumns = @JoinColumn(name = "pnr"),
-            inverseJoinColumns = @JoinColumn(name = "aadhdar"))
-    List<Passenger> passengers;
+  @OneToMany(mappedBy = "ticket", cascade =  CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+
+List<Passenger> passengers;
 }

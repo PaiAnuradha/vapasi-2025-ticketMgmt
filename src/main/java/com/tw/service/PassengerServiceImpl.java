@@ -10,12 +10,12 @@ import java.util.List;
 
 @Service
 public class PassengerServiceImpl implements PassengerService {
-    @Autowired
-    private PassengerRepository passengerRepository;
+     @Autowired
+     private PassengerRepository passengerRepository;
 
     @Override
-    public Passenger save(Passenger passenger) {
-        return null;
+    public List<Passenger> saveAll(List<Passenger> passenger) {
+        return passengerRepository.saveAll(passenger);
     }
 
     @Override
@@ -26,5 +26,9 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     public List<Passenger> findAll() {
         return List.of();
+    }
+
+    public void addPassengertoTicket(Passenger passenger){
+        passengerRepository.save(passenger);
     }
 }

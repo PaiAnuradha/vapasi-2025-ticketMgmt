@@ -1,8 +1,10 @@
 package com.tw.rest;
 
+import com.tw.dto.TicketPassengerDto;
 import com.tw.entity.Passenger;
 import com.tw.entity.Ticket;
 import com.tw.repository.PassengerRepository;
+import com.tw.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,11 @@ import java.util.List;
 public class TicketController {
 
     @Autowired
-    private PassengerRepository passengerRepository;
+    private TicketService ticketService;
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
+    public ResponseEntity<Ticket> createTicket(@RequestBody TicketPassengerDto ticketPassengerDto) {
+        ticketService.addTicket(ticketPassengerDto);
         return null;
     }
 
@@ -33,6 +36,7 @@ public class TicketController {
 
     @DeleteMapping(value = "/{pnr}")
     public ResponseEntity<Boolean> deleteTicket(@PathVariable("pnr") Integer pnr) {
+        ticketService.deleteTicketByPnr(pnr);
         return null;
     }
 
@@ -43,8 +47,9 @@ public class TicketController {
     }
 
     @DeleteMapping(value = "/{pnr}/passengers/{aadhar}")
-    public ResponseEntity<Boolean> deletePassengerFromTicket(@PathVariable("aadhar") Integer aadhar,
+    public ResponseEntity<Boolean> deletePassengerFromTicket(@PathVariable("aadhar") String aadhar,
                                                              @PathVariable("pnr")  Integer pnr) {
+        ticketService.deletePassengerFromTicket(pnr, aadhar);
         return null;
     }
 }
