@@ -50,9 +50,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.metawidget.modules.hibernate</groupId>
-            <artifactId>metawidget-hibernatevalidator</artifactId>
-            <version>4.2</version>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
         </dependency>
     </dependencies>
 

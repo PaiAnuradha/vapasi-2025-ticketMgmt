@@ -1,28 +1,32 @@
 package com.tw.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.hibernate.annotations.processing.Pattern;
+
+;import java.util.List;
 
 @Data
 @Entity
 @Table(name="passenger")
 public class Passenger {
     @Id
-    @Column(length = 12)
-
-
-//    @Size(min = 12, max = 12, message = "Aadhaar number must be exactly 12 digits")
-//    @Pattern(regexp = "\\d{12}", message = "Aadhaar number must contain only digits")
+    @Size(min = 12, max = 12, message = "Aadhaar number must be exactly 12 digits")
+    @Pattern(regexp = "\\d{12}", message = "Aadhaar number must contain only digits")
     private String aadhar;
 
-    @Column(length = 30)
+    @Column(length = 30, nullable = false)
     private String name;
+
+    @Min(value = 0, message = "Age cannot be negative")
+    @Max(value = 150, message = "Age cannot be more than 150")
+    @Column(nullable = false)
     private int age;
+
     @Column(length = 25)
+    @Enumerated(EnumType.STRING)
     private String gender;
 
+    @ManyToMany(mappedBy = "passengers")
+    private List<Ticket> tickets;
 }
