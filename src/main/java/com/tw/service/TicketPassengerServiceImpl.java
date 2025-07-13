@@ -74,22 +74,6 @@ public class TicketPassengerServiceImpl implements TicketPassengerService {
         return ticketRepository.save(ticket);
     }
 
-//    public void deletePassengerFromTicket(int pnr, String aadhar) {
-//        Ticket ticket = ticketService.getTicket(pnr);
-//        Passenger passenger = passengerRepository.findById(aadhar)
-//                .orElseThrow(() -> new PassengerNotFoundException(aadhar));
-//
-//        if (!Objects.equals(passenger.getTicket().getPnr(), pnr)) {
-//            throw new PassengerNotLinkedToTicketException();
-//        }
-//
-//        passengerService.deletePassenger(passenger, ticket);
-//
-//        if (ticket.getPassengers().isEmpty()) {
-//            ticketService.deleteTicket(pnr);
-//        }
-//    }
-
     private void validatePassengerList(List<Passenger> passengers) {
         if (passengers == null || passengers.isEmpty())
             throw new PassengerNotFoundException("Passenger list is empty");
