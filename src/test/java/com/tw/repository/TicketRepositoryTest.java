@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -30,17 +31,16 @@ class TicketRepositoryTest {
 
     @Test
     void testfindById() {
-
-        Ticket ticket = Ticket.builder()
+        Ticket ticketBuilder = Ticket.builder()
                 .destination("Bengluru")
                 .source("Mysore")
                 .travelDate(LocalDate.now())
                 .build();
-        Ticket ticket1 = ticketRepository.save(ticket);
+        Ticket ticket1 = ticketRepository.save(ticketBuilder);
         Optional<Ticket> ticketOptional = ticketRepository.findById(String.valueOf(ticket1.getPnr()));
         assertTrue(ticketOptional.isPresent());
         assertEquals(1, ticketOptional.get().getPnr());
-        assertEquals(ticket.getTravelDate(), ticketOptional.get().getTravelDate());
+        assertEquals(ticketBuilder.getTravelDate(), ticketOptional.get().getTravelDate());
         assertEquals("Bengluru", ticketOptional.get().getDestination());
         assertEquals("Mysore", ticketOptional.get().getSource());
     }
@@ -74,6 +74,19 @@ class TicketRepositoryTest {
     @Test
     void testfindByNonExistentId() {
         Optional<Ticket> ticketOptional = ticketRepository.findById(String.valueOf(1234));
+        assertFalse(ticketOptional.isPresent());
+    }
+
+    @Test
+    void testDeleteById() {
+        Ticket ticketBuilder = Ticket.builder()
+                .destination("Bengluru")
+                .source("Mysore")
+                .travelDate(LocalDate.now())
+                .build();
+        Ticket ticket1 = ticketRepository.save(ticketBuilder);
+        ticketRepository.deleteById(String.valueOf(ticket1.getPnr()));
+        Optional<Ticket> ticketOptional = ticketRepository.findById(String.valueOf(ticket1.getPnr()));
         assertFalse(ticketOptional.isPresent());
     }
 }
