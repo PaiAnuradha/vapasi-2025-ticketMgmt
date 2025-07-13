@@ -2,20 +2,19 @@ package com.tw.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.ToString.Exclude;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Builder
-@Data
 @Entity
 @Table(name="ticket")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

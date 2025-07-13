@@ -96,7 +96,13 @@ public class TicketPassengerServiceImpl implements TicketPassengerService {
         passenger.setGender(parseGender(passengerDto.getGender()));
         passenger.setAge(passengerDto.getAge());
 
-        Passenger foundPassenger = passengerService.findById(passenger.getAadhar());
+        Passenger foundPassenger = null;
+
+        try {
+            foundPassenger = passengerService.findById(passenger.getAadhar());
+        }  catch (Exception e) {
+            //todo add logger
+        }
 
         if(foundPassenger != null) {
             throw new PassengerAlreadyExistsException("Passenger already exists");
