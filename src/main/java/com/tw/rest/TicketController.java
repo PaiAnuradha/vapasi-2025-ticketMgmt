@@ -25,4 +25,10 @@ public class TicketController {
     public ResponseEntity<Ticket> getTicket(@PathVariable int pnr) {
         return new ResponseEntity<>(ticketService.getTicket(pnr), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{pnr}")
+    public ResponseEntity<Boolean> deleteTicket(@PathVariable int pnr) {
+        ticketService.deleteTicket(pnr);
+        return new ResponseEntity<>(true,HttpStatus.NO_CONTENT);
+    }
 }

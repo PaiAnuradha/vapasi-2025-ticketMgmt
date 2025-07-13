@@ -32,6 +32,11 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void deleteTicket(int pnr) {
+        Ticket ticket = getTicket(pnr);
+        if (ticket == null) {
+            throw new TicketNotFoundException();
+        }
         repoTicket.deleteById(String.valueOf(pnr));
+
     }
 }
