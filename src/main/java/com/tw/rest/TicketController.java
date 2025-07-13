@@ -6,6 +6,7 @@ import com.tw.entity.Ticket;
 import com.tw.repository.PassengerRepository;
 import com.tw.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,30 +27,19 @@ public class TicketController {
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Ticket>> getAllTickets() {
-        return null;
+        List<Ticket> tickets = ticketService.getAllTickets();
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{pnr}", produces = "application/json")
     public ResponseEntity<Ticket> getTicket(@PathVariable("pnr") Integer pnr) {
-        return null;
+        Ticket ticket = ticketService.getTicketsByPnr(pnr);
+        return new ResponseEntity<>(ticket, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{pnr}")
     public ResponseEntity<Boolean> deleteTicket(@PathVariable("pnr") Integer pnr) {
         ticketService.deleteTicketByPnr(pnr);
-        return null;
-    }
-
-    @PostMapping(value = "/{pnr}/passengers", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Ticket> addPassenger(@RequestBody Passenger passenger,
-                                               @PathVariable("pnr") Integer pnr) {
-        return null;
-    }
-
-    @DeleteMapping(value = "/{pnr}/passengers/{aadhar}")
-    public ResponseEntity<Boolean> deletePassengerFromTicket(@PathVariable("aadhar") String aadhar,
-                                                             @PathVariable("pnr")  Integer pnr) {
-        ticketService.deletePassengerFromTicket(pnr, aadhar);
         return null;
     }
 }

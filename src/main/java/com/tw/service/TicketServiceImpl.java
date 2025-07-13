@@ -5,7 +5,9 @@ import com.tw.entity.Passenger;
 import com.tw.entity.Ticket;
 import com.tw.repository.PassengerRepository;
 import com.tw.repository.TicketRepository;
-import com.tw.util.MaxPassengersAddedException;
+import com.tw.util.MaxPassengersExceededException;
+import com.tw.util.PassengerNotFoundException;
+import com.tw.util.TicketNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +62,7 @@ public class TicketServiceImpl implements TicketService {
         }
         else{
             //throw an exception
-            throw new MaxPassengersAddedException();
+            throw new MaxPassengersExceededException();
         }
     }
     public int  deleteTicketByPnr(int pnr) {
@@ -87,10 +89,6 @@ public class TicketServiceImpl implements TicketService {
 
         passenger.setTicket(ticket);
         ticket.getPassengers().add(passenger); // maintain bidirectional consistency
-
-
-
-
 
     }
 
@@ -122,5 +120,13 @@ public class TicketServiceImpl implements TicketService {
         if (ticket.getPassengers().isEmpty()) {
             repoTicket.delete(ticket);
         }
+    }
+
+    public Ticket getTicketsByPnr(int pnr) {
+        return repoTicket.findById(String.valueOf(pnr)).orElseThrow(() -> new TicketNotFoundException("Ticket with PNR " + pnr + " not found"));
+    }
+
+    public List<Ticket> getAllTickets(){
+        return repoTicket.findAll();
     }
 }

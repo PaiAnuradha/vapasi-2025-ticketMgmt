@@ -9,4 +9,6 @@ public interface PassengerService {
     boolean delete(Passenger passenger);
     List<Passenger> findAll();
     void addPassengertoTicket(Passenger passenger);
+
+    void deletePassengerFromTicket(Integer pnr, String aadhar);
 }

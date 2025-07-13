@@ -1,13 +1,14 @@
 package com.tw.rest;
 
-import com.tw.util.MaxPassengersAddedException;
+import com.tw.util.MaxPassengersExceededException;
+import com.tw.util.PassengerAlreadyExistsException;
+import com.tw.util.PassengerNotFoundException;
 import com.tw.util.TicketNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 import java.sql.SQLException;
 
@@ -20,8 +21,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(MaxPassengersAddedException.class)
-    public ResponseEntity<?> handleMaxPassengerAddedException(MaxPassengersAddedException e) {
+    @ExceptionHandler(MaxPassengersExceededException.class)
+    public ResponseEntity<?> handleMaxPassengerAddedException(MaxPassengersExceededException e) {
         ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.CONFLICT, e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
@@ -30,5 +31,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleSQLException(SQLException e) {
         ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(PassengerAlreadyExistsException.class)
+    public ResponseEntity<?> handlePassengerAlreadyExistsException(PassengerAlreadyExistsException e) {
+        ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.CONFLICT, e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PassengerNotFoundException.class)
+    public ResponseEntity<?> handlePassengerNotFoundException(PassengerNotFoundException e) {
+
     }
 }

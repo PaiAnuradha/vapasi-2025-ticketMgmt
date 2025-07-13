@@ -31,4 +31,9 @@ public class PassengerServiceImpl implements PassengerService {
     public void addPassengertoTicket(Passenger passenger){
         passengerRepository.save(passenger);
     }
+
+    @Override
+    public void deletePassengerFromTicket(Integer pnr, String aadhar) {
+
+    }
 }

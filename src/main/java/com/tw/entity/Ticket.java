@@ -26,6 +26,6 @@ public class Ticket {
     LocalDate travelDate;
 
   @OneToMany(mappedBy = "ticket", cascade =  CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-
-List<Passenger> passengers;
+  @JsonManagedReference
+  List<Passenger> passengers;
 }

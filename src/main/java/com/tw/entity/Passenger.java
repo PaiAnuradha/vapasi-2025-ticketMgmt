@@ -31,5 +31,6 @@ public class Passenger {
 
     @ManyToOne
     @JoinColumn(name="pnr")
+    @JsonBackReference
     private Ticket ticket;
 }
