@@ -1,14 +1,13 @@
 package com.tw.service;
 
 import com.tw.entity.Passenger;
+import com.tw.entity.Ticket;
 
 import java.util.List;
 
 public interface PassengerService {
-    List<Passenger> saveAll(List<Passenger> passenger);
-    boolean delete(Passenger passenger);
-    List<Passenger> findAll();
-    void addPassengertoTicket(Passenger passenger);
-
-    void deletePassengerFromTicket(Integer pnr, String aadhar);
+    void saveAll(List<Passenger> passengers);
+    void addPassengerToTicket(Passenger passenger, Ticket ticket);
+    void deletePassenger(Passenger passenger, Ticket ticket);
+    boolean passengerExists(String aadhar);
 }

@@ -12,8 +12,4 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, String> {
 
-    @Modifying
-    @Transactional
-    @Query("DELETE from Ticket t WHERE t.pnr = :pnr ")
-    public int deleteTicketsByPnr(@Param("pnr") int pnr);
 }
