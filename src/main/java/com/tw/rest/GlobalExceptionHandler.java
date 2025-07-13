@@ -1,9 +1,6 @@
 package com.tw.rest;
 
-import com.tw.util.MaxPassengersExceededException;
-import com.tw.util.PassengerAlreadyExistsException;
-import com.tw.util.PassengerNotFoundException;
-import com.tw.util.TicketNotFoundException;
+import com.tw.util.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
@@ -30,12 +27,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(SQLException.class)
-    public ResponseEntity<?> handleSQLException(SQLException e) {
-        ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ExceptionHandler(PassengerAlreadyExistsException.class)
     public ResponseEntity<?> handlePassengerAlreadyExistsException(PassengerAlreadyExistsException e) {
         ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.CONFLICT, e.getMessage());
@@ -55,5 +46,11 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage())
         );
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(PassengerNotLinkedToTicketException.class)
+    public ResponseEntity<?> handlePassengerNotLinkedToTicketException(PassengerNotLinkedToTicketException e) {
+        ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.CONFLICT, e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 }

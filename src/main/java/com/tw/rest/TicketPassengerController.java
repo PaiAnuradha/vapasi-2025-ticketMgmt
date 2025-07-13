@@ -1,6 +1,8 @@
 package com.tw.rest;
 
+import com.tw.dto.PassengerDto;
 import com.tw.dto.TicketDto;
+import com.tw.entity.Passenger;
 import com.tw.entity.Ticket;
 import com.tw.service.TicketPassengerService;
 import jakarta.validation.Valid;
@@ -25,10 +27,18 @@ public class TicketPassengerController {
     /**
      * Remove a passenger from the given ticket
      */
-//    @DeleteMapping("/{pnr}/passengers/{aadhar}")
-//    public ResponseEntity<String> deletePassengerFromTicket(@PathVariable int pnr,
-//                                                            @PathVariable String aadhar) {
-//        ticketPassengerService.deletePassengerFromTicket(pnr, aadhar);
-//        return ResponseEntity.ok("Passenger removed from ticket: " + pnr);
-//    }
+    @DeleteMapping("/{pnr}/passengers/{aadhar}")
+    public ResponseEntity<String> deletePassengerFromTicket(@PathVariable int pnr,
+                                                            @PathVariable String aadhar) {
+        ticketPassengerService.deletePassengerFromTicket(pnr, aadhar);
+        return ResponseEntity.ok("Passenger removed from ticket: " + pnr);
+    }
+
+    @PostMapping(value = "/{pnr}/passengers", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Ticket> addPassengerToTicket(@PathVariable int pnr,
+                                                       @RequestBody @Valid PassengerDto dto) {
+        Ticket ticket = ticketPassengerService.addPassengerToTicket(dto, pnr);
+        return new ResponseEntity<>(ticket, HttpStatus.CREATED);
+    }
+
 }

@@ -6,8 +6,7 @@ import com.tw.entity.Ticket;
 import java.util.List;
 
 public interface PassengerService {
-    void saveAll(List<Passenger> passengers);
-    void addPassengerToTicket(Passenger passenger, Ticket ticket);
+    Passenger findById(String aadhar);
     void deletePassenger(Passenger passenger, Ticket ticket);
     boolean passengerExists(String aadhar);
 }

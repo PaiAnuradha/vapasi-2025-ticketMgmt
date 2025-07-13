@@ -80,5 +80,48 @@ public class TicketPassengerServiceImpl implements TicketPassengerService {
         if (passengers.size() > 10)
             throw new MaxPassengersExceededException();
     }
+
+    @Override
+    public Ticket addPassengerToTicket(PassengerDto passengerDto, int pnr) {
+        Ticket ticket = ticketService.getTicket(pnr);
+        if(ticket == null) {
+            throw new TicketNotFoundException("Ticket not found for PNR :: " + pnr);
+        }
+        if(ticket.getPassengers().size() == 10){
+            throw new MaxPassengersExceededException("Max passenger for a ticket is 10");
+        }
+        Passenger passenger = new Passenger();
+        passenger.setAadhar(passengerDto.getAadhar());
+        passenger.setName(passengerDto.getName());
+        passenger.setGender(parseGender(passengerDto.getGender()));
+        passenger.setAge(passengerDto.getAge());
+
+        Passenger foundPassenger = passengerService.findById(passenger.getAadhar());
+
+        if(foundPassenger != null) {
+            throw new PassengerAlreadyExistsException("Passenger already exists");
+        }
+
+        List<Passenger> passengerList = ticket.getPassengers();
+        passengerList.add(passenger);
+        ticket.setPassengers(passengerList);
+        return ticketRepository.save(ticket);
+    }
+
+    @Override
+    public void deletePassengerFromTicket(int pnr, String aadhar) {
+        Ticket ticket = ticketService.getTicket(pnr);
+        Passenger passenger = passengerService.findById(aadhar);
+
+        if (passenger.getTicket().getPnr() != pnr) {
+            throw new PassengerNotLinkedToTicketException();
+        }
+
+        passengerService.deletePassenger(passenger, ticket);
+
+        if (ticket.getPassengers().isEmpty()) {
+            ticketService.deleteTicket(pnr);
+        }
+    }
 }
 

@@ -3,6 +3,7 @@ package com.tw.service;
 import com.tw.entity.Passenger;
 import com.tw.entity.Ticket;
 import com.tw.repository.PassengerRepository;
+import com.tw.util.PassengerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,9 @@ public class PassengerServiceImpl implements PassengerService {
     private PassengerRepository passengerRepository;
 
     @Override
-    public void saveAll(List<Passenger> passengers) {
-        passengerRepository.saveAll(passengers);
-    }
-
-    @Override
-    public void addPassengerToTicket(Passenger passenger, Ticket ticket) {
-        passenger.setTicket(ticket);
-        ticket.getPassengers().add(passenger);
+    public Passenger findById(String aadhar) {
+        return passengerRepository.findById(aadhar).
+                orElseThrow(() -> new PassengerNotFoundException(aadhar));
     }
 
     @Override
