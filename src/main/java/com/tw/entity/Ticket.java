@@ -3,7 +3,6 @@ package com.tw.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.ToString.Exclude;
 
 import java.time.LocalDate;
 import java.util.List;

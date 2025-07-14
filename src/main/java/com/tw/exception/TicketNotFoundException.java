@@ -5,7 +5,6 @@ public class TicketNotFoundException extends RuntimeException {
         super("Ticket not found");
     }
     public TicketNotFoundException(String message) {
-
         super(message);
     }
 }

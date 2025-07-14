@@ -26,11 +26,6 @@ public class TicketServiceImpl implements TicketService {
     private TicketRepository ticketRepository;
 
     @Override
-    public Ticket createTicket(Ticket ticket) {
-        return repoTicket.save(ticket);
-    }
-
-    @Override
     public List<Ticket> getAllTickets() {
         return repoTicket.findAll(); //todo exception in case empty
     }
@@ -53,7 +48,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Transactional
     public Ticket createTicketWithPassengers(TicketDto dto) {
-        if(dto.getPassengers().size() > 10 ) //todo hardcode
+        if(dto.getPassengers().size() > AppConstants.MAX_PASSENGERS )
             throw new MaxPassengersExceededException("Max passenger for a ticket is 10");
 
         boolean duplicateExists = dto.getPassengers().stream()
@@ -68,13 +63,6 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.save(ticket);
     }
 
-    private void validatePassengerList(List<Passenger> passengers) {
-        if (passengers == null || passengers.isEmpty())
-            throw new PassengerNotFoundException("Passenger list is empty");
-        if (passengers.size() > 10)
-            throw new MaxPassengersExceededException();
-    }
-
     @Override
     public Ticket addPassengerToTicket(PassengerDto passengerDto, int pnr) {
         Ticket ticket = getTicket(pnr);
@@ -87,7 +75,7 @@ public class TicketServiceImpl implements TicketService {
         Passenger passenger = new Passenger();
         passenger.setAadhar(passengerDto.getAadhar());
         passenger.setName(passengerDto.getName());
-        passenger.setGender(ParseUtil.parseGender(passengerDto.getGender()));
+        passenger.setGender(Gender.parseGender(passengerDto.getGender()));
         passenger.setAge(passengerDto.getAge());
         passenger.setTicket(ticket);
         Passenger foundPassenger = null;
