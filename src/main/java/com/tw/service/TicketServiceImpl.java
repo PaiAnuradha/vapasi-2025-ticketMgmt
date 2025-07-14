@@ -78,17 +78,9 @@ public class TicketServiceImpl implements TicketService {
         passenger.setGender(Gender.parseGender(passengerDto.getGender()));
         passenger.setAge(passengerDto.getAge());
         passenger.setTicket(ticket);
-        Passenger foundPassenger = null;
 
-        try {
-            foundPassenger = passengerService.findById(passenger.getAadhar());
-        }  catch (Exception e) {
-            //todo add logger
-        }
-
-        if(foundPassenger != null) {
+        if(passengerService.passengerExists(passenger.getAadhar()))
             throw new PassengerAlreadyExistsException("Passenger already exists");
-        }
 
         List<Passenger> passengerList = ticket.getPassengers();
         passengerList.add(passenger);
@@ -99,13 +91,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public void deletePassengerFromTicket(int pnr, String aadhar) {
         Ticket ticket = getTicket(pnr);
-        Passenger passenger = passengerService.findById(aadhar);
-
-        if (passenger.getTicket().getPnr() != pnr) {
-            throw new PassengerNotLinkedToTicketException();
-        }
-
-        passengerService.deletePassenger(passenger, ticket);
+        passengerService.deletePassenger(aadhar, ticket);
 
         if (ticket.getPassengers().isEmpty()) {
             deleteTicket(pnr);

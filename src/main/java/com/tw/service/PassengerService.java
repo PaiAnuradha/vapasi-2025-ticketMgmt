@@ -5,6 +5,6 @@ import com.tw.entity.Ticket;
 
 public interface PassengerService {
     Passenger findById(String aadhar);
-    void deletePassenger(Passenger passenger, Ticket ticket);
+    void deletePassenger(String aadhar, Ticket ticket);
     boolean passengerExists(String aadhar);
 }
