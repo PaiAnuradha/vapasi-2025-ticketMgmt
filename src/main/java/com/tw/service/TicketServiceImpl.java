@@ -17,9 +17,6 @@ import java.util.List;
 public class TicketServiceImpl implements TicketService {
 
     @Autowired
-    private TicketRepository repoTicket;
-
-    @Autowired
     private PassengerService passengerService;
 
     @Autowired
@@ -27,12 +24,16 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getAllTickets() {
-        return repoTicket.findAll(); //todo exception in case empty
+        List<Ticket> tickets =  ticketRepository.findAll();
+        if(tickets.isEmpty()) {
+            throw new TicketNotFoundException();
+        }
+        return tickets;
     }
 
     @Override
     public Ticket getTicket(int pnr) {
-        return repoTicket.findById(String.valueOf(pnr))
+        return ticketRepository.findById(String.valueOf(pnr))
                 .orElseThrow(TicketNotFoundException::new);
     }
 
@@ -42,7 +43,7 @@ public class TicketServiceImpl implements TicketService {
         if (ticket == null) {
             throw new TicketNotFoundException();
         }
-        repoTicket.deleteById(String.valueOf(pnr));
+        ticketRepository.deleteById(String.valueOf(pnr));
 
     }
 
