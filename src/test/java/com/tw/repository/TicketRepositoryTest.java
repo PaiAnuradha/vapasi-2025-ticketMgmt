@@ -51,13 +51,13 @@ class TicketRepositoryTest {
                 .source("Mysore")
                 .travelDate(LocalDate.now())
                 .build();
-        Ticket ticket1 = ticketRepository.save(ticketBuilder);
+        ticketRepository.save(ticketBuilder);
         Ticket ticketBuilder2 = Ticket.builder()
                 .destination("Bengluru")
                 .source("Mysore")
                 .travelDate(LocalDate.now())
                 .build();
-        Ticket ticket2 = ticketRepository.save(ticketBuilder2);
+        ticketRepository.save(ticketBuilder2);
 
         List<Ticket> tickets = ticketRepository.findAll();
         assertFalse(tickets.isEmpty());
