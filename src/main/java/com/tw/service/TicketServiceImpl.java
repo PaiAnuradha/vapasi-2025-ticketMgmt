@@ -17,27 +17,23 @@ import java.util.List;
 public class TicketServiceImpl implements TicketService {
 
     @Autowired
-    private TicketRepository repoTicket;
-
-    @Autowired
     private PassengerService passengerService;
 
     @Autowired
     private TicketRepository ticketRepository;
 
     @Override
-    public Ticket createTicket(Ticket ticket) {
-        return repoTicket.save(ticket);
-    }
-
-    @Override
     public List<Ticket> getAllTickets() {
-        return repoTicket.findAll(); //todo exception in case empty
+        List<Ticket> tickets =  ticketRepository.findAll();
+        if(tickets.isEmpty()) {
+            throw new TicketNotFoundException();
+        }
+        return tickets;
     }
 
     @Override
     public Ticket getTicket(int pnr) {
-        return repoTicket.findById(String.valueOf(pnr))
+        return ticketRepository.findById(String.valueOf(pnr))
                 .orElseThrow(TicketNotFoundException::new);
     }
 
@@ -47,7 +43,7 @@ public class TicketServiceImpl implements TicketService {
         if (ticket == null) {
             throw new TicketNotFoundException();
         }
-        repoTicket.deleteById(String.valueOf(pnr));
+        ticketRepository.deleteById(String.valueOf(pnr));
 
     }
 
@@ -67,13 +63,6 @@ public class TicketServiceImpl implements TicketService {
         List<Passenger> passengers = DtoMapperUtil.mapToPassengers(dto.getPassengers(), ticket);
         ticket.setPassengers(passengers);
         return ticketRepository.save(ticket);
-    }
-
-    private void validatePassengerList(List<Passenger> passengers) {
-        if (passengers == null || passengers.isEmpty())
-            throw new PassengerNotFoundException("Passenger list is empty");
-        if (passengers.size() > 10)
-            throw new MaxPassengersExceededException();
     }
 
     @Override
