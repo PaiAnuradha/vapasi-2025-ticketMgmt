@@ -2,6 +2,7 @@ package com.tw.service;
 
 import com.tw.entity.Passenger;
 import com.tw.entity.Ticket;
+import com.tw.exception.PassengerNotLinkedToTicketException;
 import com.tw.repository.PassengerRepository;
 import com.tw.exception.PassengerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,13 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public void deletePassenger(Passenger passenger, Ticket ticket) {
+    public void deletePassenger(String aadhar, Ticket ticket) {
+        Passenger passenger = findById(aadhar);
+
+        if (passenger.getTicket().getPnr() != ticket.getPnr()) {
+            throw new PassengerNotLinkedToTicketException();
+        }
+
         ticket.getPassengers().remove(passenger);
         passenger.setTicket(null);
         passengerRepository.delete(passenger);
