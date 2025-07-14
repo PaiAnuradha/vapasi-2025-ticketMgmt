@@ -95,7 +95,7 @@ public class TicketPassengerServiceImpl implements TicketPassengerService {
         passenger.setName(passengerDto.getName());
         passenger.setGender(parseGender(passengerDto.getGender()));
         passenger.setAge(passengerDto.getAge());
-
+        passenger.setTicket(ticket);
         Passenger foundPassenger = null;
 
         try {
