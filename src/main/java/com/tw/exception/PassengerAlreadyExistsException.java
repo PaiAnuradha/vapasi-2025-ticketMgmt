@@ -1,4 +1,4 @@
-package com.tw.util;
+package com.tw.exception;
 
 public class PassengerAlreadyExistsException extends RuntimeException {
     PassengerAlreadyExistsException() {

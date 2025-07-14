@@ -1,4 +1,4 @@
-package com.tw.util;
+package com.tw.exception;
 
 public class PassengerNotLinkedToTicketException extends RuntimeException {
     public PassengerNotLinkedToTicketException() {

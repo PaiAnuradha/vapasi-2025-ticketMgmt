@@ -1,12 +1,6 @@
 package com.tw.util;
 
-public enum Gender {
-    MALE,
-    FEMALE,
-    NON_BINARY,
-    OTHER,
-    PREFER_NOT_TO_SAY;
-
+public class ParseUtil {
     public static Gender parseGender(String input) {
         try {
             return Gender.valueOf(input.trim().toUpperCase());
@@ -14,4 +8,5 @@ public enum Gender {
             throw new IllegalArgumentException("Invalid gender: " + input);
         }
     }
+
 }

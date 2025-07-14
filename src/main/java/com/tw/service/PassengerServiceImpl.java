@@ -3,11 +3,9 @@ package com.tw.service;
 import com.tw.entity.Passenger;
 import com.tw.entity.Ticket;
 import com.tw.repository.PassengerRepository;
-import com.tw.util.PassengerNotFoundException;
+import com.tw.exception.PassengerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PassengerServiceImpl implements PassengerService {
