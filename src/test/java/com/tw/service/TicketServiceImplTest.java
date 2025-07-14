@@ -8,6 +8,7 @@ import com.tw.exception.MaxPassengersExceededException;
 import com.tw.exception.PassengerAlreadyExistsException;
 import com.tw.exception.TicketNotFoundException;
 import com.tw.repository.TicketRepository;
+import com.tw.util.DtoMapperUtil;
 import com.tw.util.Gender;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -126,10 +127,18 @@ class TicketServiceImplTest {
 
         PassengerDto dto1 = new PassengerDto("123456789012", "John", 30, "MALE");
         PassengerDto dto2 = new PassengerDto("987654321098", "Jane", 28, "FEMALE");
+        ticketDto.setPassengers(List.of(dto1, dto2));
+        when(passengerService.passengerExists(anyString())).thenReturn(false);
 
-        ticketDto.setPassengers(Arrays.asList(dto1, dto2));
+        Ticket ticket = DtoMapperUtil.mapToTicket(ticketDto);
+        Passenger p1 = DtoMapperUtil.mapToPassenger(dto1, ticket);
+        Passenger p2 = DtoMapperUtil.mapToPassenger(dto2, ticket);
+        ticket.setPassengers(List.of(p1, p2));
 
-        Ticket ticket = ticketService.createTicketWithPassengers(ticketDto);
+        when(ticketRepository.save(any(Ticket.class))).thenReturn(ticket);
+        ticketService.createTicketWithPassengers(ticketDto);
+        verify(ticketRepository, times(1)).save(any(Ticket.class));
+        assertNotNull(ticket);
     }
 
     @Test
