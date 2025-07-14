@@ -51,7 +51,6 @@ public class TicketServiceImpl implements TicketService {
 
     }
 
-
     @Transactional
     public Ticket createTicketWithPassengers(TicketDto dto) {
         if(dto.getPassengers().size() > 10 ) //todo hardcode

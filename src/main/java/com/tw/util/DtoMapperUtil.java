@@ -33,4 +33,26 @@ public class DtoMapperUtil {
                 })
                 .collect(Collectors.toList());
     }
+
+    public static TicketDto mapToTicketDto(Ticket ticket) {
+        TicketDto dto = new TicketDto();
+        dto.setSource(ticket.getSource());
+        dto.setDestination(ticket.getDestination());
+        dto.setTravelDate(ticket.getTravelDate().toString()); // LocalDate → String
+        dto.setPassengers(mapToPassengerDto(ticket.getPassengers())); // List<Passenger> → List<PassengerDto>
+        return dto;
+    }
+
+    public static List<PassengerDto> mapToPassengerDto(List<Passenger> passengers) {
+        return passengers.stream()
+                .map(p -> {
+                    PassengerDto dto = new PassengerDto();
+                    dto.setAadhar(p.getAadhar());
+                    dto.setName(p.getName());
+                    dto.setGender(p.getGender().toString()); // Enum → String
+                    dto.setAge(p.getAge());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }

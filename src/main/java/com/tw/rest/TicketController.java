@@ -32,7 +32,7 @@ public class TicketController {
     @DeleteMapping("/{pnr}")
     public ResponseEntity<Boolean> deleteTicketByPnr(@PathVariable int pnr) {
         ticketService.deleteTicket(pnr);
-        return new ResponseEntity<>(true,HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(true,HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
