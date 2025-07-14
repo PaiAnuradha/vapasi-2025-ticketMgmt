@@ -70,18 +70,14 @@ public class TicketServiceImpl implements TicketService {
         if(ticket == null) {
             throw new TicketNotFoundException("Ticket not found for PNR :: " + pnr);
         }
-        if(ticket.getPassengers().size() == 10){
-            throw new MaxPassengersExceededException("Max passenger for a ticket is 10");
+        if(ticket.getPassengers().size() == AppConstants.MAX_PASSENGERS) {
+            throw new MaxPassengersExceededException("Max passenger for a ticket is "+AppConstants.MAX_PASSENGERS);
         }
-        Passenger passenger = new Passenger();
-        passenger.setAadhar(passengerDto.getAadhar());
-        passenger.setName(passengerDto.getName());
-        passenger.setGender(Gender.parseGender(passengerDto.getGender()));
-        passenger.setAge(passengerDto.getAge());
-        passenger.setTicket(ticket);
 
-        if(passengerService.passengerExists(passenger.getAadhar()))
+        if(passengerService.passengerExists(passengerDto.getAadhar()))
             throw new PassengerAlreadyExistsException("Passenger already exists");
+
+        Passenger passenger = DtoMapperUtil.mapToPassenger(passengerDto, ticket);
 
         List<Passenger> passengerList = ticket.getPassengers();
         passengerList.add(passenger);

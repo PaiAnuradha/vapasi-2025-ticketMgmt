@@ -5,13 +5,14 @@ import com.tw.dto.TicketDto;
 import com.tw.entity.Passenger;
 import com.tw.entity.Ticket;
 import com.tw.exception.MaxPassengersExceededException;
+import com.tw.exception.PassengerAlreadyExistsException;
 import com.tw.exception.TicketNotFoundException;
 import com.tw.repository.TicketRepository;
+import com.tw.util.Gender;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -32,15 +33,6 @@ class TicketServiceImplTest {
     @InjectMocks
     private TicketServiceImpl ticketService;
 
-
-    /*
-    Ticket createTicketWithPassengers(TicketDto dto);
-    void deletePassengerFromTicket(int pnr, String aadhar);
-    Ticket addPassengerToTicket(PassengerDto passengerDto, int pnr);
-     */
-
-
-
     @Test
     void testGetAllTickets() {
         List<Ticket> ticketList = Arrays.asList(new Ticket(), new Ticket());
@@ -50,6 +42,7 @@ class TicketServiceImplTest {
 
         assertEquals(2, result.size());
     }
+
     @Test
     void testGetAllTicketsOnEmptyTable() {
         when(ticketRepository.findAll()).thenReturn(List.of());
@@ -99,7 +92,7 @@ class TicketServiceImplTest {
     void testCreateTicketWithMoreThanTenPassengers() {
         List<PassengerDto> passengerDtoList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            passengerDtoList.add(new PassengerDto("11223344556"+i, "Name"+i, 20, "FEMALE"));
+            passengerDtoList.add(new PassengerDto("11223344556" + i, "Name" + i, 20, "FEMALE"));
         }
         passengerDtoList.add(new PassengerDto("112233445511", "Name11", 20, "MALE"));
         passengerDtoList.add(new PassengerDto("112233445512", "Name12", 20, "MALE"));
@@ -119,11 +112,13 @@ class TicketServiceImplTest {
         TicketDto ticketDto = new TicketDto();
         ticketDto.setPassengers(passengerDtoList);
 
-        //when(ticketRepository.existsById())
+        when(passengerService.passengerExists(anyString())).thenReturn(true);
+
+        assertThrows(PassengerAlreadyExistsException.class, () -> ticketService.createTicketWithPassengers(ticketDto));
     }
 
     @Test
-    void testCreateTicket(){
+    void testCreateTicket() {
         TicketDto ticketDto = new TicketDto();
         ticketDto.setTravelDate(LocalDate.now().toString());
         ticketDto.setSource("source");
@@ -134,5 +129,76 @@ class TicketServiceImplTest {
 
         ticketDto.setPassengers(Arrays.asList(dto1, dto2));
 
+        Ticket ticket = ticketService.createTicketWithPassengers(ticketDto);
     }
+
+    @Test
+    void testAddPassengerToNonExistentTicket() {
+        when(ticketRepository.findById(anyString())).thenReturn(Optional.empty());
+        assertThrows(TicketNotFoundException.class, () -> ticketService.addPassengerToTicket(new PassengerDto(), 1));
+    }
+
+    @Test
+    void testAddPassengerToTicketWithMaxPassengers() {
+        Ticket ticket = new Ticket();
+        ticket.setPnr(1);
+        List<Passenger> passengerList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Passenger passenger = new Passenger();
+            passenger.setTicket(ticket);
+            passenger.setGender(Gender.FEMALE);
+            passenger.setAadhar("11223344556" + i);
+            passenger.setName("Name" + i);
+            passengerList.add(passenger);
+        }
+        ticket.setPassengers(passengerList);
+        when(ticketRepository.findById(String.valueOf(1))).thenReturn(Optional.of(ticket));
+        assertThrows(MaxPassengersExceededException.class, () -> ticketService.addPassengerToTicket(new PassengerDto(), 1));
+    }
+
+    @Test
+    void testAddPassengerToTicketWithExistingPassengers() {
+        PassengerDto dto1 = new PassengerDto("123456789012", "John", 30, "MALE");
+
+        when(passengerService.passengerExists(anyString())).thenReturn(true);
+        Ticket ticket = new Ticket();
+        ticket.setPnr(1);
+        ticket.setPassengers(List.of(new Passenger()));
+        when(ticketRepository.findById(anyString())).thenReturn(Optional.of(ticket));
+        assertThrows(PassengerAlreadyExistsException.class, () -> ticketService.addPassengerToTicket(dto1, 1));
+    }
+
+    @Test
+    void testAddPassengerToTicket() {
+        PassengerDto dto1 = new PassengerDto("123456789012", "John", 30, "MALE");
+        Ticket ticket = new Ticket();
+        ticket.setPnr(1);
+
+        when(ticketRepository.findById(anyString())).thenReturn(Optional.of(ticket));
+        when(passengerService.passengerExists(anyString())).thenReturn(false);
+        List<Passenger> passengerList = new ArrayList<>();
+        Passenger passenger = new Passenger();
+        passenger.setTicket(ticket);
+        passenger.setGender(Gender.FEMALE);
+        passenger.setAadhar("112233445566");
+        passenger.setName("Name");
+        passengerList.add(passenger);
+        ticket.setPassengers(passengerList);
+
+        when(ticketRepository.save(ticket)).thenReturn(ticket);
+        Ticket result = ticketService.addPassengerToTicket(dto1, 1);
+        assertEquals(2, result.getPassengers().size());
+    }
+
+    @Test
+    void testDeleteLastPassengerFromTicket() {
+        Ticket ticket = new Ticket();
+        ticket.setPnr(1);
+        ticket.setPassengers(new ArrayList<>());
+        when(ticketRepository.findById(anyString())).thenReturn(Optional.of(ticket));
+        doNothing().when(passengerService).deletePassenger(anyString(), any(Ticket.class));
+        ticketService.deletePassengerFromTicket(1, "");
+        verify(ticketRepository, times(1)).deleteById(anyString());
+    }
+
 }

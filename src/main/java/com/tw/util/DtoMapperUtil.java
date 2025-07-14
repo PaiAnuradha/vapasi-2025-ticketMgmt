@@ -22,16 +22,17 @@ public class DtoMapperUtil {
 
     public static List<Passenger> mapToPassengers(List<PassengerDto> passengerDtoList, Ticket ticket) {
         return passengerDtoList.stream()
-                .map(dto -> {
-                    Passenger p = new Passenger();
-                    p.setAadhar(dto.getAadhar());
-                    p.setName(dto.getName());
-                    p.setGender(parseGender(dto.getGender()));
-                    p.setAge(dto.getAge());
-                    p.setTicket(ticket);
-                    return p;
-                })
+                .map(dto -> mapToPassenger(dto, ticket))
                 .collect(Collectors.toList());
+    }
+    public static Passenger mapToPassenger(PassengerDto passengerDto, Ticket ticket) {
+        Passenger p = new Passenger();
+        p.setAadhar(passengerDto.getAadhar());
+        p.setName(passengerDto.getName());
+        p.setGender(parseGender(passengerDto.getGender()));
+        p.setAge(passengerDto.getAge());
+        p.setTicket(ticket);
+        return p;
     }
 
     public static TicketDto mapToTicketDto(Ticket ticket) {
@@ -45,14 +46,17 @@ public class DtoMapperUtil {
 
     public static List<PassengerDto> mapToPassengerDto(List<Passenger> passengers) {
         return passengers.stream()
-                .map(p -> {
-                    PassengerDto dto = new PassengerDto();
-                    dto.setAadhar(p.getAadhar());
-                    dto.setName(p.getName());
-                    dto.setGender(p.getGender().toString()); // Enum → String
-                    dto.setAge(p.getAge());
-                    return dto;
-                })
+                .map(DtoMapperUtil::mapToPassengerDto)
                 .collect(Collectors.toList());
+    }
+
+    public static PassengerDto mapToPassengerDto(Passenger passengers) {
+
+        PassengerDto dto = new PassengerDto();
+        dto.setAadhar(passengers.getAadhar());
+        dto.setName(passengers.getName());
+        dto.setGender(passengers.getGender().toString());
+        dto.setAge(passengers.getAge());
+        return dto;
     }
 }
