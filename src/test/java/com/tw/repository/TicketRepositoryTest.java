@@ -1,7 +1,7 @@
 package com.tw.repository;
 
 import com.tw.entity.Ticket;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -17,6 +17,8 @@ class TicketRepositoryTest {
     @Autowired
     private TicketRepository ticketRepository;
 
+    private int pnr = 1;
+
     @Test
     public void testSaveTicket(){
         Ticket ticket = Ticket.builder()
@@ -26,6 +28,7 @@ class TicketRepositoryTest {
                 .build();
         ticketRepository.save(ticket);
         assertThat(ticket.getPnr()).isGreaterThan(0);
+        pnr++;
     }
 
     @Test
@@ -38,7 +41,7 @@ class TicketRepositoryTest {
         Ticket ticket1 = ticketRepository.save(ticketBuilder);
         Optional<Ticket> ticketOptional = ticketRepository.findById(String.valueOf(ticket1.getPnr()));
         assertTrue(ticketOptional.isPresent());
-        assertEquals(1, ticketOptional.get().getPnr());
+        assertEquals(pnr, ticketOptional.get().getPnr());
         assertEquals(ticketBuilder.getTravelDate(), ticketOptional.get().getTravelDate());
         assertEquals("Bengluru", ticketOptional.get().getDestination());
         assertEquals("Mysore", ticketOptional.get().getSource());
